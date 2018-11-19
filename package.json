@@ -16,5 +16,6 @@
   "bugs": {
     "url": "https://github.com/kaminskydeveloper/auth-module/issues"
   },
-  "homepage": "https://github.com/kaminskydeveloper/auth-module#readme"
+  "homepage": "https://github.com/kaminskydeveloper/auth-module#readme",
+  "dependencies": {}
 }

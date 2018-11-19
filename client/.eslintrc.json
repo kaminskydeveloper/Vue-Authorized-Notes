@@ -1,0 +1,1 @@
+{ "rules": { "linebreak-style": ["error", "windows"], "max-len": 0 } }

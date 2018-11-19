@@ -1,11 +1,10 @@
-const express = require("express");
-const Joi = require("joi");
-const bcrypt = require("bcryptjs");
-
-const db = require("../db/connection");
-const users = db.get("users");
+const express = require('express');
+const Joi = require('joi');
+const bcrypt = require('bcryptjs');
+const db = require('../db/connection');
+const users = db.get('users');
 // users.index("username");
-users.createIndex("username", { unique: true });
+users.createIndex('username', { unique: true });
 
 const router = express.Router();
 
@@ -20,22 +19,22 @@ const schema = Joi.object().keys({
   password: Joi.string()
     .trim()
     .min(10)
-    .required()
+    .required(),
 });
 
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   res.json({
-    message: "🏸"
+    message: '🏸',
   });
 });
 
-router.post("/signup", (req, res, next) => {
+router.post('/signup', (req, res, next) => {
   const result = Joi.validate(req.body, schema);
   if (result.error === null) {
     //make sure username is unique
     users
       .findOne({
-        username: req.body.username
+        username: req.body.username,
       })
       .then(user => {
         //if user is undifinder, username is not in the db, otherwise duplicate user detected
@@ -44,8 +43,9 @@ router.post("/signup", (req, res, next) => {
           //respond with an error!
 
           const error = new Error(
-            "Username already exists! Please choose another one."
+            'Username already exists! Please choose another one.'
           );
+          res.status(409);
           next(error);
         } else {
           //hash the password
@@ -54,7 +54,7 @@ router.post("/signup", (req, res, next) => {
             //insert the user with hashed password
             const newUser = {
               username: req.body.username,
-              password: hashedPassword
+              password: hashedPassword,
             };
 
             users.insert(newUser).then(insertedUser => {
@@ -65,6 +65,7 @@ router.post("/signup", (req, res, next) => {
         }
       });
   } else {
+    res.status(422);
     next(result.error);
   }
 });
