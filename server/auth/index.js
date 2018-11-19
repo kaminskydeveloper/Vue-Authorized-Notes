@@ -18,6 +18,7 @@ const schema = Joi.object().keys({
     .max(30)
     .required(),
   password: Joi.string()
+    .trim()
     .min(10)
     .required()
 });
@@ -49,7 +50,7 @@ router.post("/signup", (req, res, next) => {
         } else {
           //hash the password
           //insert the user with the hashed password
-          bcrypt.hash(req.body.password, 12).then(hashedPassword => {
+          bcrypt.hash(req.body.password.trim(), 12).then(hashedPassword => {
             //insert the user with hashed password
             const newUser = {
               username: req.body.username,
@@ -57,6 +58,7 @@ router.post("/signup", (req, res, next) => {
             };
 
             users.insert(newUser).then(insertedUser => {
+              delete insertedUser.password;
               res.json(insertedUser);
             });
           });
