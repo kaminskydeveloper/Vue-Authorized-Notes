@@ -1,10 +1,11 @@
 <template>
   <section>
     <h1>Sign Up</h1>
+    <div v-if="signingUp" style="text-align: center"><img src="../assets/loading.svg" alt=""></div>
     <div v-if="errorMessage" class="alert alert-danger" role="alert">
       {{ errorMessage }}
     </div>
-    <form @submit.prevent="signup">
+    <form v-if="!signingUp" @submit.prevent="signup">
       <div class="form-group">
         <label for="username">Username</label>
         <input
@@ -42,6 +43,8 @@
 <script>
 import Joi from 'joi';
 
+import Loader from '../assets/loading.svg';
+
 const SIGNUP_URL = 'http://localhost:5000/auth/signup';
 
 const schema = Joi.object().keys({
@@ -62,6 +65,7 @@ const schema = Joi.object().keys({
 
 export default {
   data: () => ({
+    signingUp: false,
     errorMessage: '',
     user: {
       username: '',
@@ -85,6 +89,7 @@ export default {
           username: this.user.username,
           password: this.user.password,
         };
+        this.signingUp = true;
         fetch(SIGNUP_URL, {
           method: 'POST',
           body: JSON.stringify(body),
@@ -101,10 +106,16 @@ export default {
             });
           })
           .then(user => {
-            this.$router.push('/login');
+            setTimeout(() => {
+              this.signingUp = false;
+              this.$router.push('/login');
+            }, 1000);
           })
           .catch(error => {
-            this.errorMessage = error.message;
+            setTimeout(() => {
+              this.signingUp = false;
+              this.errorMessage = error.message;
+            }, 1000);
           });
       }
     },

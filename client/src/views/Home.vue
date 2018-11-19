@@ -10,7 +10,14 @@
         class="btn btn-primary btn-lg"
         :to="{name: 'SignUp'}"
         href="#"
-        role="button">Sign Up</router-link>
+        role="button" style="margin-right: 20px">Sign Up</router-link>
+
+      <router-link
+        class="btn btn-primary btn-lg"
+        :to="{name: 'LogIn'}"
+        href="#"
+        role="button"
+        style="margin-left: 20px">Log In</router-link>
   </p>
 </div>
   </div>
