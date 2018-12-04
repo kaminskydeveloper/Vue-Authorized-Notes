@@ -5,8 +5,9 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-
+const middlewares = require('./auth/middlewares.js');
 const auth = require('./auth/index');
+const notes = require('./api/notes');
 
 app.use(volleyball);
 
@@ -18,13 +19,21 @@ app.use(
 
 app.use(express.json());
 
+app.use(middlewares.checkTokenSetUser);
+
+app.use((req, res, next) => {
+  next();
+});
+
 app.get('/', (req, res) => {
   res.json({
     message: 'Hello world!',
+    user: req.user,
   });
 });
 
 app.use('/auth', auth);
+app.use('/api/v1/notes', middlewares.isLoggedIn, notes);
 
 function notFound(req, res, next) {
   res.status(404);
